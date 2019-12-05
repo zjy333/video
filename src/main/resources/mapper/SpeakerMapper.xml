@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.zhiyou.mapper.SpeakerMapper">
+  
+  <resultMap type="speaker" id="speakerMap">
+   <id column="id" property="id"/>
+   <result column="speaker_name" property="speaker_name"/>
+   <result column="speaker_desc" property="speaker_desc"/>
+   <result column="speaker_job" property="speaker_job"/>
+   <result column="pic_url" property="pic_url"/>
+  </resultMap>
+  
+  <insert id="add">
+   insert into speaker values(#{speaker_name},#{speaker_desc},#{speaker_job},#{pic_url})
+  </insert>
+  
+  <update id="update">
+   update speaker
+    <set>
+     <if test="speaker_name!=null">
+      speaker_name=#{speaker_name},
+     </if>
+     <if test="speaker_desc!=null">
+      speaker_desc=#{speaker_desc},
+     </if>
+     <if test="speaker_job!=null">
+      speaker_job=#{speaker_job},
+     </if>
+     <if test="pic_url!=null">
+      pic_url=#{pic_url}
+     </if>  
+    </set>
+    where id=#{id}
+  </update>
+  
+  <delete id="delete">
+   delete from speaker where id={id}
+  </delete>
+  
+  <delete id="deletes">
+   delete from speaker where id in
+    <foreach open="(" collection="array" item="id" index="i" separator="," close=")">
+     #{id}
+    </foreach>
+  </delete>
+  
+  <select id="selectAll">
+   select * from speaker limit ${page},${num}
+  </select>
+  
+  <select id="selectById">
+   select * from speaker where id=#{id}
+  </select>
+  
+  <select id="selectLikeName">
+   select * from speaker
+    <where>
+     <if test="speaker_name!=null">
+      speaker_name like concat('%',#{speaker_name},'%')
+     </if>
+     <if test="speaker_desc!=null">
+      speaker_desc like concat('%',#{speaker_desc},'%')
+     </if>
+     <if test="speaker_job!=null">
+      speaker_job like concat('%',#{speaker_job},'%')
+     </if>
+     <if test="pic_url!=null">	
+      pic_url like concat('%',#{pic_url},'%')
+     </if>     
+    </where>
+  </select>
+  
+  <select id="selectCount">
+   select count(*) from speaker
+  </select>
+  
+  </mapper>

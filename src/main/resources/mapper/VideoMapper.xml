@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.zhiyou.mapper.VideoMapper">
+   <resultMap type="video" id="videoMap">
+    <id column="video_id" property="video_id" />
+    <result column="title" property="title"/>
+    <result column="detail" property="detail"/>
+    <result column="time" property="time"/>
+    <result column="speaker_id" property="speaker_id"/>
+    <result column="course_id" property="course_id"/>
+    <result column="video_url" property="video_url"/>
+    <result column="image_url" property="image_url"/>
+    <result column="play_num" property="play_num"/>
+   </resultMap>
+   
+   <insert id="add">
+    insert into video values(#{title},#{detail},#{time},#{speaker_id},#{course_id},#{video_url},#{image_url},#{play_num})
+   </insert>
+   
+   <update id="update">
+    update video
+     <set>
+     <if test="title!=null">
+     title=#{title},
+     </if>
+     <if test="detail!=null">
+     detail=#{detail},
+     </if>
+     <if test="time!=0">
+     time=#{time},
+     </if>
+     <if test="speaker_id!=0">
+     speaker_id=#{speaker_id},
+     </if>
+     <if test="course_id!=0">
+     course_id=#{course_id},
+     </if>
+     <if test="video_url!=null">
+     video_url=#{video_url},
+     </if>
+     <if test="image_url!=null">
+     image_url=#{image_url},
+     </if>
+     <if test="play_num!=0">
+     play_num=#{play_num}
+     </if>
+     </set>
+     where video_id=#{video_id}
+   </update>
+   
+   <delete id="delete">
+    delete from video where video_id=#{video_id}
+   </delete>
+   
+   <delete id="deletes">
+    delete from video where video_id in
+      <foreach open="(" collection="array" item="video_id" index="i" separator="," close=")">
+        #{video_id}
+      </foreach>
+   </delete>
+   
+   <select id="selectAll" resultMap="videoMap">
+    select * from video limit ${page},${num} 
+   </select>
+   
+   <select id="selectById" resultType="video">
+    select * from video where video_id={video_id}
+   </select>
+   
+   <select id="selectLikeName" resultMap="videoMap">
+    select * from video
+     <where>
+       <if test="video_id!=null">
+        video_id like concat('%',#{video_id},'%')
+       </if>
+       <if test="title!=null">
+        title like concat('%',#{title},'%')
+       </if>
+       <if test="detail!=null">
+        detail like concat('%',#{detail},'%')
+       </if>
+       <if test="time!=null">
+        time like concat('%',#{time},'%')
+       </if>
+       <if test="speaker_id!=null">
+        speaker_id like concat('%',#{speaker_id},'%')
+       </if>
+       <if test="course_id!=null">
+        course_id like concat('%',#{course_id},'%')
+       </if>
+       <if test="video_url!=null">
+        video_url like concat('%',#{video_url},'%')
+       </if>
+       <if test="image_url!=null">
+        image_url like concat('%',#{image_url},'%')
+       </if>
+       <if test="play_num!=null">
+        play_num like concat('%',#{play_num},'%')
+       </if>
+     </where>
+   </select>
+   
+   <select id="selectCount">
+     select count(*) from video
+   </select>
+   
+  </mapper>
